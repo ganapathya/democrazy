@@ -1,0 +1,22 @@
+# Democrazy Meta-Agent Requirements
+# Self-Assembling AI System for NLP2SQL
+
+# Core Python packages (most should be available in standard library)
+# No external dependencies required for basic functionality!
+
+# Optional database connectors (install if needed):
+# psycopg2-binary>=2.9.0    # For PostgreSQL support
+# pymysql>=1.0.0            # For MySQL support
+
+# The system is designed to work with:
+# - Python 3.8+
+# - Standard library modules: asyncio, sqlite3, json, logging, datetime, uuid, random
+# - No external AI/ML dependencies required!
+
+# For enhanced functionality, you may optionally install:
+# requests>=2.25.0          # For real HTTP API connections
+# numpy>=1.21.0             # For advanced numerical computations
+# pandas>=1.3.0             # For data analysis capabilities
+
+# Note: The system demonstrates emergent intelligence using only
+# Python standard library - no heavy ML frameworks needed! 
