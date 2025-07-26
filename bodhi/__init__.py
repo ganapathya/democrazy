@@ -44,7 +44,11 @@ from .specialists.mongodb_specialist import MongoDBSpecialist
 from .meta_agent.nlp2sql_meta_agent import NLP2SQLMetaAgent, DatabaseType, QueryComplexity
 
 # Communication layer - Agent-to-Agent protocols
-from .communication.a2a import A2AProtocol, AgentMessage
+from .communication.a2a import (
+    A2AProtocol, AgentCard, AgentProvider, AgentSkill, AgentCapabilities,
+    create_text_message, create_data_message, create_file_message,
+    MessageRole, TaskStatus, Task, Message, Artifact
+)
 
 # Tools and MCP - Model Context Protocol compliance
 from .tools.mcp import MCPTool, MCPInterface

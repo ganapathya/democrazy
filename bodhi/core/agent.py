@@ -27,7 +27,10 @@ import logging
 # Framework imports (will be implemented)
 from ..utils.exceptions import BodhiError, AgentExecutionError
 from ..security.sandbox import AgentSandbox
-from ..communication.a2a import A2AProtocol, AgentMessage
+from ..communication.a2a import (
+    A2AProtocol, AgentCard, AgentProvider, AgentSkill, AgentCapabilities,
+    create_text_message, MessageRole, TaskStatus
+)
 from ..tools.mcp import MCPTool
 from ..learning.feedback import FeedbackEntry
 from .capability import CapabilityType, Capability
@@ -172,6 +175,44 @@ class Agent:
     - Serialize/deserialize for persistence
     """
     
+    def _create_agent_card(self) -> 'AgentCard':
+        """Create A2A Agent Card from agent DNA"""
+        # Convert capabilities to A2A skills
+        skills = []
+        for capability in self.dna.capabilities:
+            skill = AgentSkill(
+                id=f"{capability.type.value}_{capability.domain}",
+                name=f"{capability.type.value.replace('_', ' ').title()}",
+                description=f"{capability.type.value} capability in {capability.domain}",
+                tags=[capability.type.value, capability.domain],
+                examples=[f"Example {capability.type.value} task"],
+                input_modes=["text", "data"],
+                output_modes=["text", "data"]
+            )
+            skills.append(skill)
+        
+        # Create agent provider info
+        provider = AgentProvider(
+            organization="Bodhi Framework",
+            contact="agent@bodhi.ai"
+        )
+        
+        # Create agent card
+        return AgentCard(
+            name=self.dna.name,
+            description=f"Bodhi agent with capabilities: {[cap.type.value for cap in self.dna.capabilities]}",
+            url=f"https://agents.bodhi.ai/{self.dna.agent_id}",
+            provider=provider,
+            version="1.0.0",
+            capabilities=AgentCapabilities(
+                streaming=True,
+                push_notifications=True,
+                state_transition_history=True
+            ),
+            skills=skills,
+            documentation_url=f"https://docs.bodhi.ai/agents/{self.dna.agent_id}"
+        )
+    
     def __init__(self, dna: AgentDNA, sandbox: Optional[AgentSandbox] = None):
         self.dna = dna
         self.state = AgentState.INITIALIZING
@@ -183,8 +224,9 @@ class Agent:
         self.communication_channels: Dict[str, Any] = {}
         self.execution_history: List[Dict[str, Any]] = []
         
-        # A2A Communication
-        self.a2a_protocol = A2AProtocol(self.dna.agent_id)
+        # A2A Communication with proper Agent Card
+        agent_card = self._create_agent_card()
+        self.a2a_protocol = A2AProtocol(self.dna.agent_id, agent_card)
         
         # Learning system
         self.feedback_entries: List[FeedbackEntry] = []
@@ -195,7 +237,7 @@ class Agent:
         self.last_active = self.created_at
         self.task_count = 0
         
-        logger.info(f"🧘 Agent {self.dna.name} ({self.dna.agent_id}) initialized")
+        logger.info(f"🧘 Agent {self.dna.name} ({self.dna.agent_id}) initialized with A2A protocol")
         self.state = AgentState.ACTIVE
     
     @property
@@ -370,24 +412,61 @@ class Agent:
     
     async def communicate_with_agent(self, target_agent_id: str, message: Dict[str, Any]) -> Dict[str, Any]:
         """
-        Send a message to another agent via A2A protocol
+        Communicate with another agent via Google's A2A protocol
         
-        This enables agents to collaborate and share information.
+        This demonstrates agent-to-agent communication using the industry-standard
+        A2A protocol for collaboration, delegation, or information sharing.
         """
         self.state = AgentState.COMMUNICATING
         
         try:
-            agent_message = AgentMessage(
-                sender_id=self.id,
-                recipient_id=target_agent_id,
-                content=message,
-                message_type="collaboration"
+            # Create A2A task for this communication
+            task = self.a2a_protocol.create_task()
+            
+            # Create A2A message with proper structure
+            a2a_message = create_text_message(
+                text=str(message),
+                role=MessageRole.USER,
+                metadata={
+                    "source_agent": self.id,
+                    "target_agent": target_agent_id,
+                    "collaboration_type": "agent_communication"
+                }
             )
             
-            response = await self.a2a_protocol.send_message(agent_message)
+            # Send via A2A protocol
+            result = await self.a2a_protocol.send_message(task.id, a2a_message)
             
-            logger.info(f"📡 Agent {self.name} communicated with {target_agent_id}")
-            return response
+            # Record successful communication in execution history
+            self.execution_history.append({
+                'timestamp': datetime.now(timezone.utc),
+                'action': 'a2a_communication',
+                'target_agent': target_agent_id,
+                'task_id': task.id,
+                'message': message,
+                'response': result,
+                'success': True
+            })
+            
+            logger.info(f"📡 Agent {self.name} communicated with {target_agent_id} via A2A")
+            return result
+            
+        except Exception as e:
+            # Record failed communication
+            self.execution_history.append({
+                'timestamp': datetime.now(timezone.utc),
+                'action': 'a2a_communication',
+                'target_agent': target_agent_id,
+                'message': message,
+                'error': str(e),
+                'success': False
+            })
+            
+            logger.error(f"❌ A2A Communication failed: {str(e)}")
+            return {
+                'success': False,
+                'error': str(e)
+            }
             
         finally:
             self.state = AgentState.ACTIVE
@@ -488,3 +567,21 @@ class Agent:
     
     def __repr__(self) -> str:
         return f"Agent(id='{self.id}', name='{self.name}', capabilities={len(self.capabilities)})" 
+
+
+
+    def get_agent_card_json(self) -> str:
+        """Get Agent Card as JSON for A2A discovery"""
+        return self.a2a_protocol.get_agent_card_json()
+
+    async def discover_remote_agent(self, agent_url: str) -> 'AgentCard':
+        """Discover remote agent capabilities via A2A protocol"""
+        return await self.a2a_protocol.discover_agent(agent_url)
+
+    async def handle_a2a_message(self, task_id: str, message: 'Message', skill_id: str = None) -> 'Task':
+        """Handle incoming A2A message from another agent"""
+        return await self.a2a_protocol.handle_incoming_message(task_id, message, skill_id)
+
+    def register_a2a_skill_handler(self, skill_id: str, handler: callable):
+        """Register handler for specific A2A skill"""
+        self.a2a_protocol.register_message_handler(skill_id, handler) 
