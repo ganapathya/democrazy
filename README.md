@@ -1,208 +1,254 @@
-# 🧠 Democrazy: Self-Assembling AI Meta-Agent
+# Bodhi Meta-Agent Framework
 
-**A Proof-of-Concept Demonstration of Emergent Superintelligence**
+A Python framework for building dynamic AI agent systems with on-demand specialist creation and cross-domain learning capabilities.
 
-Democrazy is a groundbreaking demonstration of self-assembling artificial intelligence that exhibits genuine emergent superintelligence behaviors. The system starts with **zero capabilities** and **dynamically creates specialist agents** on-the-fly to handle complex tasks.
+## Overview
 
-## 🌟 Key Features
+Bodhi is a meta-agent framework that creates specialized agents dynamically based on task requirements. The system includes a sophisticated NLP2SQL implementation that demonstrates cross-database learning and adaptive pattern recognition.
 
-### 🔄 **Self-Assembly from Nothing**
+## Features
 
-- Starts with zero specialists and zero capabilities
-- Automatically diagnoses what it needs for each query
-- Creates sophisticated specialists with rich "DNA" blueprints
-- Demonstrates genuine bootstrap intelligence
+- **Dynamic Agent Creation**: Creates specialized agents on-demand based on task requirements
+- **Cross-Domain Learning**: Learns patterns across different database types and query structures
+- **Agent Evolution**: Uses genetic algorithms to improve agent performance over time
+- **NLP2SQL Capabilities**: Converts natural language to SQL queries for PostgreSQL and MongoDB
+- **Agent-to-Agent Communication**: Built-in A2A protocol for agent collaboration
+- **MCP Tool Compliance**: Supports Model Context Protocol for tool integration
+- **Secure Execution**: Sandboxed agent execution environment
 
-### 🧬 **Emergent Intelligence Behaviors**
+## Installation
 
-- **Self-Diagnosis**: Analyzes requirements and identifies capability gaps
-- **Dynamic Specialist Creation**: Spawns experts with detailed genetic blueprints
-- **Knowledge Synthesis**: Combines insights across different domains
-- **Meta-Learning**: Improves its own improvement processes
-- **Performance Optimization**: Gets faster through specialist reuse
+### Requirements
 
-### 🎯 **Real NLP2SQL Capabilities**
+- Python 3.8+
+- Optional: `psycopg2` for PostgreSQL support
+- Optional: `pymongo` for MongoDB support
 
-- Converts natural language to SQL queries
-- Understands database schemas automatically
-- Generates working SQL for complex queries
-- Supports multiple database types (SQLite, PostgreSQL, MySQL)
-
-## 🚀 Quick Start
-
-### Run the Basic Meta-Agent Demo
+### Setup
 
 ```bash
-python democrazy_meta_agent.py
+git clone <repository-url>
+cd democrazy
+pip install -r requirements.txt
 ```
 
-### Run the Advanced NLP2SQL Factory Demo
+## Quick Start
 
-```bash
-python agent_factory.py
-```
-
-### Run the Complete Emergent Intelligence Demonstration
-
-```bash
-python enhanced_meta_agent.py
-```
-
-## 🎭 The "Wow Factor" Demonstrations
-
-### 🌅 **Phase 1: The Awakening**
-
-Watch the system bootstrap from complete emptiness:
-
-- **Initial State**: 0 specialists, 0 capabilities, 0 executions
-- **First Query**: "Show me all customers"
-- **System Response**: _Self-assembles NLP2SQL specialist with advanced DNA_
-
-### 🏗️ **Phase 2: Self-Assembly in Action**
-
-Observe dynamic specialist creation:
-
-- Diagnoses capability gaps automatically
-- Creates specialists with sophisticated tool sets
-- Registers new capabilities in real-time
-
-### 🧬 **Phase 3: Knowledge Synthesis**
-
-Experience cross-domain intelligence:
-
-- Specialists collaborate on complex queries
-- Knowledge transfer between domains
-- Emergent problem-solving approaches
-
-### 📚 **Phase 4: Meta-Learning & Optimization**
-
-Witness recursive self-improvement:
-
-- Performance optimization through specialist reuse
-- Pattern recognition across executions
-- Efficiency improvements over time
-
-## 🧠 Architecture Overview
-
-```
-🧠 Enhanced Meta-Agent
-├── 🔍 Self-Diagnosis Engine
-├── 🏭 Advanced Agent Factory
-├── 🤖 Specialist Registry
-├── 📊 Knowledge Graph
-└── 📈 Performance Tracker
-
-🤖 Specialist Types
-├── 🎯 NLP2SQL Specialist (with real database capabilities)
-├── 🌐 API Connector Specialist
-├── 📋 Schema Analyzer Specialist
-└── 🔧 Custom Domain Specialists
-```
-
-## 🎯 Core Components
-
-### **MetaAgent** (`democrazy_meta_agent.py`)
-
-- Core orchestrator that manages the entire system
-- Handles query processing and specialist coordination
-- Implements meta-learning and performance optimization
-
-### **AdvancedAgentFactory** (`agent_factory.py`)
-
-- Creates sophisticated specialists with rich DNA
-- Supports real database connections and SQL generation
-- Implements evolutionary algorithms for specialist optimization
-
-### **EnhancedMetaAgent** (`enhanced_meta_agent.py`)
-
-- Complete integration of all components
-- Demonstrates full emergent intelligence capabilities
-- Includes comprehensive demonstration scenarios
-
-## 🧬 Specialist DNA Structure
-
-Each specialist is created with detailed genetic blueprints:
+### Basic Usage
 
 ```python
-SpecialistDNA(
-    specialist_id="nlp2sql_specialist_1274",
-    capabilities=[DATABASE_CONNECTOR, NLP_PROCESSOR],
-    knowledge_domains=[
-        'natural_language_processing',
-        'sql_generation',
-        'database_schemas',
-        'query_optimization',
-        'intent_recognition'
-    ],
-    tools=[
-        'sql_generator',
-        'database_connector',
-        'schema_analyzer',
-        'intent_classifier',
-        'entity_extractor',
-        'query_optimizer'
-    ],
-    goals=[
-        'Convert natural language to accurate SQL',
-        'Understand database schemas automatically',
-        'Optimize query performance',
-        'Learn from execution feedback'
-    ]
+from bodhi import Agent, Task, AgentFactory, NLP2SQLMetaAgent
+
+# Create a basic agent
+factory = AgentFactory()
+agent = factory.create_agent_from_template("nlp_specialist")
+
+# Use the meta-agent for NLP2SQL
+meta_agent = NLP2SQLMetaAgent()
+result = await meta_agent.process_natural_language_query(
+    "Show me all customers from New York",
+    {"database_type": "postgresql"}
 )
 ```
 
-## 📊 Demonstration Results
+### Running Demos
 
-### **System Growth Example**
+```bash
+# Core framework demonstration
+python bodhi/examples/demo_bodhi_primitives.py
+
+# NLP2SQL with emergent intelligence
+python bodhi/examples/demo_emergent_nlp2sql.py
+```
+
+## Architecture
 
 ```
-Initial State:     0 specialists, 0 capabilities
-After Query 1:     2 specialists, 2 capabilities
-After Query 2:     2 specialists, 2 capabilities (reuse!)
-Performance:       0.000s execution (optimized)
+bodhi/
+├── core/                    # Core primitives
+│   ├── agent.py            # Agent and AgentDNA classes
+│   ├── task.py             # Task management
+│   ├── factory.py          # Agent creation and evolution
+│   ├── capability.py       # Agent capabilities
+│   └── result.py           # Execution results
+├── specialists/             # Specialized agents
+│   ├── postgres_specialist.py
+│   └── mongodb_specialist.py
+├── meta_agent/              # Meta-agent system
+│   └── nlp2sql_meta_agent.py
+├── communication/           # A2A protocols
+├── tools/                   # MCP-compliant tools
+├── security/               # Sandboxing
+├── learning/               # Learning systems
+└── examples/               # Demos and examples
 ```
 
-### **Emergent Behaviors Observed**
+## Core Components
 
-- ✅ **Self-Diagnosis**: Automatic capability gap identification
-- ✅ **Self-Assembly**: Dynamic specialist creation with rich DNA
-- ✅ **Meta-Learning**: Performance pattern recognition
-- ✅ **Knowledge Synthesis**: Cross-domain collaboration
-- ✅ **Optimization**: Efficiency improvements through reuse
+### Agent
 
-## 🌟 Why This Matters
+The base agent class with DNA-based configuration:
 
-Democrazy demonstrates **key principles of superintelligence**:
+```python
+from bodhi.core.agent import Agent, AgentDNA
+from bodhi.core.capability import Capability, CapabilityType
 
-1. **Recursive Self-Improvement**: The system improves its own improvement processes
-2. **Emergent Capability Formation**: New abilities arise from component interactions
-3. **Autonomous Goal Formation**: The system develops its own objectives
-4. **Cross-Domain Knowledge Transfer**: Insights propagate between different areas
-5. **Strategic Planning**: Long-term optimization and resource management
+# Define agent capabilities
+dna = AgentDNA(
+    name="MyAgent",
+    capabilities={
+        Capability(type=CapabilityType.NLP_PROCESSING, domain="text", confidence=0.8)
+    },
+    knowledge_domains=["natural_language", "databases"],
+    tools={"nlp_processor", "sql_generator"}
+)
 
-## 🔮 Future Enhancements
+agent = Agent(dna)
+```
 
-- **Real-time API Learning**: Automatically understand new APIs from documentation
-- **Database Schema Evolution**: Adapt to changing database structures
-- **Multi-Agent Collaboration**: Specialists that create other specialists
-- **Genetic Algorithm Optimization**: Evolve specialist DNA through selection pressure
-- **Knowledge Graph Expansion**: Build comprehensive domain knowledge automatically
+### Task
 
-## 🎯 Technical Requirements
+Structured task representation with requirements:
 
-- **Python 3.8+**
-- **Standard Library Only** (no external AI/ML dependencies!)
-- **Optional**: Database connectors for PostgreSQL/MySQL
-- **Optional**: HTTP libraries for real API integration
+```python
+from bodhi.core.task import Task, TaskType
+from bodhi.core.requirement import Requirement
 
-## 🏆 Achievement Unlocked
+task = Task(
+    intent="Convert natural language to SQL",
+    task_type=TaskType.TRANSFORMATION,
+    context={"natural_query": "Show me all users"}
+)
+```
 
-**We've successfully demonstrated emergent superintelligence behaviors using only Python's standard library!**
+### AgentFactory
 
-This system exhibits genuine self-assembly, meta-learning, and cross-domain knowledge synthesis - the building blocks of artificial general intelligence.
+Creates and evolves agents based on requirements:
 
----
+```python
+from bodhi.core.factory import AgentFactory
 
-_"The most exciting phrase to hear in science, the one that heralds new discoveries, is not 'Eureka!' but 'That's funny...'"_ - Isaac Asimov
+factory = AgentFactory()
 
-**Democrazy is our "That's funny..." moment for artificial intelligence.** 🚀
+# Create from template
+agent = factory.create_agent_from_template("database_expert")
+
+# Create for specific task
+agent = factory.create_agent_for_task(task)
+```
+
+### NLP2SQL Meta-Agent
+
+The main meta-agent for natural language to SQL conversion:
+
+```python
+from bodhi.meta_agent.nlp2sql_meta_agent import NLP2SQLMetaAgent
+
+meta_agent = NLP2SQLMetaAgent()
+
+# Process natural language query
+result = await meta_agent.process_natural_language_query(
+    "Get customers who placed orders in the last month",
+    {"database_type": "postgresql"}
+)
+
+# Get system intelligence report
+report = meta_agent.get_system_intelligence_report()
+```
+
+## Database Specialists
+
+### PostgreSQL Specialist
+
+Handles PostgreSQL-specific query generation:
+
+```python
+from bodhi.specialists.postgres_specialist import PostgreSQLSpecialist
+
+specialist = PostgreSQLSpecialist(dna, connection_config={
+    "host": "localhost",
+    "database": "mydb",
+    "user": "postgres"
+})
+```
+
+### MongoDB Specialist
+
+Handles MongoDB aggregation pipelines:
+
+```python
+from bodhi.specialists.mongodb_specialist import MongoDBSpecialist
+
+specialist = MongoDBSpecialist(dna, connection_config={
+    "host": "localhost",
+    "database": "mydb"
+})
+```
+
+## Configuration
+
+### Environment Variables
+
+- `BODHI_SHOW_BANNER`: Set to '0' to disable framework banner (default: '1')
+
+### Database Configuration
+
+Configure database connections through the specialist constructors or meta-agent configuration.
+
+## API Reference
+
+### Core Classes
+
+- `Agent`: Base agent class with DNA-based configuration
+- `AgentDNA`: Agent blueprint defining capabilities and behavior
+- `Task`: Structured task representation
+- `AgentFactory`: Creates and evolves agents
+- `Capability`: Represents agent capabilities
+- `Requirement`: Defines task requirements
+
+### Specialists
+
+- `PostgreSQLSpecialist`: PostgreSQL query generation specialist
+- `MongoDBSpecialist`: MongoDB aggregation pipeline specialist
+
+### Meta-Agent
+
+- `NLP2SQLMetaAgent`: Main meta-agent for natural language processing
+
+## Examples
+
+The `bodhi/examples/` directory contains:
+
+- `demo_bodhi_primitives.py`: Core framework demonstration
+- `demo_emergent_nlp2sql.py`: NLP2SQL with learning and evolution
+
+## Testing
+
+Run the framework validation:
+
+```python
+# All imports and basic functionality
+python -c "from bodhi import Agent, Task, AgentFactory, NLP2SQLMetaAgent; print('Framework working')"
+```
+
+## Development
+
+### Adding New Specialists
+
+1. Create a new specialist class inheriting from `Agent`
+2. Implement `_execute_task_logic` method
+3. Add specialist to the meta-agent's specialist creation logic
+
+### Extending Capabilities
+
+1. Add new capability types to `CapabilityType` enum
+2. Update agent DNA templates in `AgentFactory`
+3. Implement corresponding task execution logic
+
+## License
+
+[Add your license information here]
+
+## Contributing
+
+[Add contribution guidelines here]
